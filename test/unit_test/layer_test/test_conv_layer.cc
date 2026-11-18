@@ -49,6 +49,13 @@ INSTANTIATE_TEST_SUITE_P(LayerTest, ConvLayerTest,
                              testing::Values(ActivationType_None, ActivationType_ReLU, ActivationType_ReLU6,
                                              ActivationType_SIGMOID_MUL)));
 
+INSTANTIATE_TEST_SUITE_P(DilationExceedsInput, ConvLayerTest,
+                        testing::Values(
+                            std::make_tuple(1, 32, 4, 1, 3, 6, 1, 6, -1, DATA_TYPE_FLOAT, ActivationType_None),
+                            std::make_tuple(1, 10, 4, 1, 3, 8, 1, 8, -1, DATA_TYPE_FLOAT, ActivationType_ReLU),
+                            std::make_tuple(2, 3, 4, 2, 3, 6, 1, 6, -1, DATA_TYPE_FLOAT, ActivationType_None),
+                            std::make_tuple(1, 3, 8, 1, 3, 6, 2, 6, -1, DATA_TYPE_FLOAT, ActivationType_None)));
+
 TEST_P(ConvLayerTest, ConvLayer) {
     // get param
     int batch             = std::get<0>(GetParam());

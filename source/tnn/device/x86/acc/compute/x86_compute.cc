@@ -43,10 +43,11 @@ Status X86_IM2COL(float* src, int channel, int height, int width, int kernelh, i
         int h_base = h_offset * dilationh - padt;
         int w_base = w_offset * dilationw - padl;
 
-        int h_base_start = MAX(0, (UP_DIV(-h_base, strideh)));
-        int h_base_end   = MIN(height_col, UP_DIV(height - h_base, strideh));
-        int w_base_start = MAX(0, (UP_DIV(-w_base, stridew)));
-        int w_base_end   = MIN(width_col, UP_DIV(width - w_base, stridew));
+        // Large dilation can place a kernel tap entirely outside the input.
+        int h_base_start = MIN(height_col, MAX(0, UP_DIV(-h_base, strideh)));
+        int h_base_end   = MAX(0, MIN(height_col, UP_DIV(height - h_base, strideh)));
+        int w_base_start = MIN(width_col, MAX(0, UP_DIV(-w_base, stridew)));
+        int w_base_end   = MAX(0, MIN(width_col, UP_DIV(width - w_base, stridew)));
 
         auto src_c = src + c_im * height * width;
         auto dst_c = dst + c * height_col * width_col;
